@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import MoodIcon from './MoodIcon.tsx';
 // import { useDispatch } from 'react-redux';
@@ -62,10 +62,19 @@ const MoodIconWrapper = styled.div`
 const normalizeCoord = (coord, squareSize, circleSize) =>
   Math.min(Math.max(0 + circleSize / 2, coord), squareSize - circleSize / 2) / squareSize;
 
-export default function Graph () {
+interface Props {
+mood: {energy: number, valance: number};
+setMood: Dispatch<React.SetStateAction<{
+  energy: number;
+  valance: number;
+}>>;
+}
+
+export default function Graph (props: Props) {
 //   const dispatch = useDispatch();
+  const {mood, setMood} = props;
   const [isPointerDown, setPointerDown] = useState(false);
-  const [{ x, y }, setCoords] = useState({ x: 0.5, y: 0.5 });
+  const [{ x, y }, setCoords] = useState({ x: mood.energy, y: mood.valance });
   const windowWidth = window.innerWidth; 
   const squareSize = Math.min(300, 0.7 * windowWidth);
   const circleSize = squareSize / 7.5;
@@ -95,8 +104,9 @@ export default function Graph () {
     const x = normalizeCoord(pointerEvent.clientX - rect.left, squareSize, circleSize);
     const y = normalizeCoord(pointerEvent.clientY - rect.top, squareSize, circleSize);
     setCoords({ x, y });
+    setMood({energy:y,valance:x})
   }
-console.log(x,y)
+// console.log(x,y)
   return (
     <Square
       onPointerDown={(e) => {
