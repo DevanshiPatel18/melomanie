@@ -45,6 +45,7 @@ export default function Home (props: IHomeProps) {
       setOptions(data)
   }
   const onClickRecommend = async () =>{
+    try{
     setReccomendationLoading(true);
     const selectedGenresList = Array.prototype.map.call(selectedOptions, function(item) { return item.value; }).join(",");
     const params: RecommendationParams = {
@@ -78,14 +79,25 @@ export default function Home (props: IHomeProps) {
     setRecommendation(formattedData);
     setReccomendationLoading(false);
     console.log(formattedData);
+  }catch(error){
+    toast({
+      title: 'An error occured!',
+      description: error,
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+  })
+  }
   }
 
-  const onClickFavouriteButton = async (trackId: string) =>{
+  const onClickFavouriteButton = async (recommendedSong: any) =>{
     if(email.length){
       try{
-        console.log(trackId)
-    const result = await fetch(`${url}/favourites/${email}/${trackId}`);
-    if(!result){
+    const result = await fetch(`${url}/favorites/${email}`,{
+      method: 'POST',
+      body: JSON.stringify(recommendedSong)
+    });
+    if(result){
       toast({
         title: 'Added to Favourites!',
         description: "Remember this email to access the favourites.",
@@ -115,29 +127,34 @@ export default function Home (props: IHomeProps) {
   }
 
 const onClickGetFavorites = async () => {
-  const result = await fetch(`${url}/favorite/${email}`,{
+  try{
+  const result = await fetch(`${url}/favoritelist/${email}`,{
     method: 'GET',
-    // mode:'no-cors',
-    headers: {
-      'Content-Type': 'application/json',
-      "Access-Control-Allow-Origin": '*', // Required for CORS support to work
-      // "Access-Control-Allow-Credentials": 'true', // Required for cookies, authorization headers with HTTPS
-    },
   })
-  const data = await result?.json()
-  const formattedData = data?.tracks?.map((item) => {
-    return {
-      explicit: item.explicit,
-      href: item.href,
-      name: item.name,
-      previewUrl: item.preview_url,
-      uri: item.uri,
-      imageUri: item.album.images?.[0]?.url,
-      artistName: item.album.name,
-      trackId: item.id
-    }
-  })
-  setFavorites(formattedData)
+  console.log(result)
+  // const data = await result?.json()
+  // const formattedData = data?.tracks?.map((item) => {
+  //   return {
+  //     explicit: item.explicit,
+  //     href: item.href,
+  //     name: item.name,
+  //     previewUrl: item.preview_url,
+  //     uri: item.uri,
+  //     imageUri: item.album.images?.[0]?.url,
+  //     artistName: item.album.name,
+  //     trackId: item.id
+  //   }
+  // })
+  // setFavorites(formattedData)
+}catch(error){
+  toast({
+    title: 'An error occured!',
+    description: error,
+    status: 'error',
+    duration: 9000,
+    isClosable: true,
+})
+}
 }
 
   return (
@@ -168,12 +185,12 @@ const onClickGetFavorites = async () => {
                   alert("Maximum 5 genres can be selected")  
                   }
                   else
-                setSelectedOptions(newValue)
+                setSelectedOptions(newValue)  
                 }} />
               </div>
           </div>
             <div style={{width: '100%'}}>
-              <p style={{float:'left'}}>Dancability</p>
+              <p style={{float:'left'}}>Danceability</p>
               <CustomSlider setSliderValue={setDancebilityValue} sliderValue={danceabilityValue}/>
           </div>
             <div style={{width: '100%'}}>
@@ -234,7 +251,7 @@ const onClickGetFavorites = async () => {
                         aria-label='Done'
                         fontSize='20px'
                         icon={<FavoriteSVGIcon style={{padding:8}}/>}
-                        onClick={() => onClickFavouriteButton(item.trackId)}
+                        onClick={() => onClickFavouriteButton(item)}
                       />
                       <Link href={`https://open.spotify.com/track/${item.trackId}`} isExternal>
                       <IconButton

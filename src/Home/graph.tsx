@@ -1,8 +1,6 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import MoodIcon from './MoodIcon.tsx';
-// import { useDispatch } from 'react-redux';
-// import { setAudioProperties } from '../reducer';
 
 const Square = styled.div`
   height: ${({ size }) => size}px;
