@@ -104,7 +104,7 @@ export default function Graph (props: Props) {
     const x = normalizeCoord(pointerEvent.clientX - rect.left, squareSize, circleSize);
     const y = normalizeCoord(pointerEvent.clientY - rect.top, squareSize, circleSize);
     setCoords({ x, y });
-    setMood({energy:y,valance:x})
+    setMood({energy:x,valance:y})
   }
 // console.log(x,y)
   return (
