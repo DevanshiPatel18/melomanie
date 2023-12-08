@@ -133,11 +133,12 @@ const onClickGetFavorites = async () => {
   try{
     if(email.length> 0){
       setFavoriteLoading(true);
-    const result = await fetch(`${url}/test/${email}`,{
+    const result = await fetch(`${url}/favoritelist/${email}`,{
     method: 'GET',
       })
   const data = await result?.json();
-  const formattedData = data?.message?.map((item) => {
+  if(data?.data?.length > 0 ){
+  const formattedData = data?.data?.map((item) => {
     console.log(item);
     return {
       explicit: item.explicit,
@@ -150,9 +151,17 @@ const onClickGetFavorites = async () => {
       trackId: item.track_id
     }
   })
-  console.log("formaated adar", formattedData)
   setFavorites(formattedData)
-  setFavoriteLoading(false);
+}else{
+  toast({
+    title: data?.message,
+    description: '',
+    status: 'error',
+    duration: 9000,
+    isClosable: true,
+})
+}
+setFavoriteLoading(false);
 }else{
   toast({
     title: 'Email is required!',
