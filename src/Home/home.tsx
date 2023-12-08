@@ -17,6 +17,7 @@ export default function Home (props: IHomeProps) {
   const [recommendations, setRecommendation] = useState([]);
   const [favorites,setFavorites] = useState([]);
   const [recommendationLoading, setReccomendationLoading] = useState(false);
+  const [favoriteLoading,setFavoriteLoading] = useState(false);
   const [danceabilityValue, setDancebilityValue] = useState(50);
   const [speechinessValue, setSpeechinessValue] = useState(50);
   const [selectedOptions, setSelectedOptions ] = useState<MultiValue<{
@@ -33,7 +34,7 @@ export default function Home (props: IHomeProps) {
   })
 
   useEffect(() => {
-  // fetchData();
+  fetchData();
   },[])
   const fetchData = async () => {
     const results = await fetch(`${url}/genres`);
@@ -97,16 +98,18 @@ export default function Home (props: IHomeProps) {
       method: 'POST',
       body: JSON.stringify(recommendedSong)
     });
+    const data = await result.json();
     if(result){
       toast({
-        title: 'Added to Favourites!',
-        description: "Remember this email to access the favourites.",
+        title: data?.message,
+        description: "",
         status: 'success',
         duration: 9000,
         isClosable: true,
       })
     }
-    console.log(await result.json())
+    // console.log(await result.json())
+    onClickGetFavorites()
   }catch(error){
     toast({
       title: 'An error occured!',
@@ -129,12 +132,11 @@ export default function Home (props: IHomeProps) {
 const onClickGetFavorites = async () => {
   try{
     if(email.length> 0){
+      setFavoriteLoading(true);
     const result = await fetch(`${url}/test/${email}`,{
     method: 'GET',
       })
-  // console.log(await result.json())
   const data = await result?.json();
-  console.log("-->",typeof data,data?.message)
   const formattedData = data?.message?.map((item) => {
     console.log(item);
     return {
@@ -150,6 +152,7 @@ const onClickGetFavorites = async () => {
   })
   console.log("formaated adar", formattedData)
   setFavorites(formattedData)
+  setFavoriteLoading(false);
 }else{
   toast({
     title: 'Email is required!',
@@ -226,7 +229,7 @@ const onClickGetFavorites = async () => {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               />
-              <Button colorScheme='blue' onClick={onClickGetFavorites}>Get Favorites</Button>
+              <Button isLoading={favoriteLoading} colorScheme='blue' onClick={onClickGetFavorites}>Get Favorites</Button>
             </div>
           </div>
       <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', marginTop:'2%'}}>
@@ -320,7 +323,7 @@ const onClickGetFavorites = async () => {
                                 aria-label='Done'
                                 fontSize='20px'
                                 icon={<FavoriteSVGIcon style={{padding:8}}/>}
-                                onClick={() => onClickFavouriteButton(item.trackId)}
+                                onClick={() => onClickFavouriteButton(item)}
                               />
                               <Link href={`https://open.spotify.com/track/${item.trackId}`} isExternal>
                               <IconButton
