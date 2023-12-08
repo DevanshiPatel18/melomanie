@@ -213,88 +213,31 @@ const onClickGetFavorites = async () => {
           </div>
           <Button isLoading={recommendationLoading} colorScheme='blue' onClick={onClickRecommend}>Recommend</Button>
       </div>
-      { recommendations?.length != 0 &&
-       <>
-       <div>
-        <div>
-          <div 
-          style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}
-          >
-            <Input
-            style={{width:'50%'}}
-            required
-            pr='4.5rem'
-            type={'email'}
-            placeholder='Enter Email'
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            />
-            <Button colorScheme='blue' onClick={onClickGetFavorites}>Get Favorites</Button>
+      <div>
+            <div 
+            style={{display:'flex', flexDirection:'row', justifyContent:'space-between'}}
+            >
+              <Input
+              style={{width:'50%'}}
+              required
+              pr='4.5rem'
+              type={'email'}
+              placeholder='Enter Email'
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              />
+              <Button colorScheme='blue' onClick={onClickGetFavorites}>Get Favorites</Button>
+            </div>
           </div>
-        </div>
-        <Text float={'left'} textAlign={'left'}>Recommended Songs</Text>
-        <div 
-        style={{ display: 'flex',flexDirection:'column', flexWrap: 'wrap'}}
-        >
-          <div style={{display:'flex', flexDirection:'column'}}>
-          {recommendations ? recommendations.map((item)=>{
-            return (
-            <Card
-            direction={{ base: 'column', sm: 'row' }}
-            overflow='hidden'
-            variant='outline' 
-            size={'sm'} 
-            key={item?.uri} maxW='sm' style={{display:'flex', margin:'1% 0'}}>
-                    <Image
-                      src={item?.imageUri}
-                      alt='Green double couch with wooden legs'
-                      borderRadius='lg'
-                      maxW={{ base: '100%', sm: '150px' }}
-                    />
-                    <Stack width={'100%'}>
-                      <CardBody>
-                      <Heading size='md'>{item?.name}</Heading>
-                      <Text>{item.artistName}</Text>
-                  </CardBody>
-                  <CardFooter>
-                  <ButtonGroup justifyContent={'space-between'} flexGrow={1}>
-                      <IconButton
-                        isRound={true}
-                        variant='solid'
-                        colorScheme='teal'
-                        aria-label='Done'
-                        fontSize='20px'
-                        icon={<FavoriteSVGIcon style={{padding:8}}/>}
-                        onClick={() => onClickFavouriteButton(item)}
-                      />
-                      <Link href={`https://open.spotify.com/track/${item.trackId}`} isExternal>
-                      <IconButton
-                        isRound={true}
-                        variant='solid'
-                        colorScheme='teal'
-                        aria-label='Done'
-                        fontSize='20px'
-                        icon={<ShareSVGIcon style={{padding:8}}/>}
-                      />
-                      </Link>
-                    </ButtonGroup>
-                  </CardFooter>
-                    </Stack>
-                </Card>)
-                        
-                  }) : <div></div>}
-                </div>
-                  </div>
-                  </>
-              }
-            <div>
-              { favorites?.length != 0 &&
-                  <>
-                    <Text float={'left'} textAlign={'left'}>Favorite Songs</Text>
-                  <div 
-                  style={{ display: 'flex',flexDirection:'column', flexWrap: 'wrap'}}
-                  >
-            {favorites ? favorites.map((item)=>{
+      <div style={{display:'flex', flexDirection:'row', justifyContent:'space-between', marginTop:'2%'}}>
+      { recommendations?.length != 0 &&
+        <div>
+          <Text >Recommended Songs</Text>
+            <div 
+          style={{ display: 'flex',flexDirection:'column', flexWrap: 'wrap'}}
+          >
+            <div style={{display:'flex', flexDirection:'column'}}>
+            {recommendations ? recommendations.map((item)=>{
               return (
               <Card
               direction={{ base: 'column', sm: 'row' }}
@@ -322,7 +265,7 @@ const onClickGetFavorites = async () => {
                           aria-label='Done'
                           fontSize='20px'
                           icon={<FavoriteSVGIcon style={{padding:8}}/>}
-                          onClick={() => onClickFavouriteButton(item.trackId)}
+                          onClick={() => onClickFavouriteButton(item)}
                         />
                         <Link href={`https://open.spotify.com/track/${item.trackId}`} isExternal>
                         <IconButton
@@ -339,13 +282,68 @@ const onClickGetFavorites = async () => {
                       </Stack>
                   </Card>)
                           
-                }) : <div></div>}
-                    </div>
-        </>
-            }
+                    }) : <div></div>}
+                  </div>
             </div>
-            </div>
-  </div>
+        </div>
+      }
+      <div>
+        { favorites?.length != 0 &&
+            <>
+              <Text>Favorite Songs</Text>
+                  <div style={{ display: 'flex',flexDirection:'column', flexWrap: 'wrap'}}>
+                    {favorites ? favorites.map((item)=>{
+                      return (
+                        <Card
+                          direction={{ base: 'column', sm: 'row' }}
+                          overflow='hidden'
+                          variant='outline' 
+                          size={'sm'} 
+                          key={item?.uri} maxW='sm' style={{display:'flex', margin:'1% 0'}}>
+                        <Image
+                          src={item?.imageUri}
+                          alt='Green double couch with wooden legs'
+                          borderRadius='lg'
+                          maxW={{ base: '100%', sm: '150px' }}
+                        />
+                        <Stack width={'100%'}>
+                          <CardBody>
+                            <Heading size='md'>{item?.name}</Heading>
+                            <Text>{item.artistName}</Text>
+                          </CardBody>
+                          <CardFooter>
+                            <ButtonGroup justifyContent={'space-between'} flexGrow={1}>
+                              <IconButton
+                                isRound={true}
+                                variant='solid'
+                                colorScheme='teal'
+                                aria-label='Done'
+                                fontSize='20px'
+                                icon={<FavoriteSVGIcon style={{padding:8}}/>}
+                                onClick={() => onClickFavouriteButton(item.trackId)}
+                              />
+                              <Link href={`https://open.spotify.com/track/${item.trackId}`} isExternal>
+                              <IconButton
+                                isRound={true}
+                                variant='solid'
+                                colorScheme='teal'
+                                aria-label='Done'
+                                fontSize='20px'
+                                icon={<ShareSVGIcon style={{padding:8}}/>}
+                              />
+                              </Link>
+                            </ButtonGroup>
+                          </CardFooter>
+                        </Stack>
+                      </Card>)
+                          
+                     }) : <div></div>}
+                  </div>
+            </>
+          }
+        </div>
+        </div>
+      </div>
   );
 }
 
