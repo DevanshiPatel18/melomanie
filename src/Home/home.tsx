@@ -192,7 +192,7 @@ setFavoriteLoading(false);
       <Image src={require('./title.png')}/>
       </div>
       <div 
-      style={{...styles.parentContainer, justifyItems:'stretch', justifyContent:'centers', alignItems:'stretch', gap: '10%'}}
+      style={{...styles.parentContainer, justifyItems:'stretch', justifyContent:'center', alignItems:'stretch', gap: '10%', flexWrap:'wrap'}}
       >
           <Graph mood={mood} setMood={setMood}/>
         <div 
