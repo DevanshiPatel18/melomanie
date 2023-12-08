@@ -128,9 +128,10 @@ export default function Home (props: IHomeProps) {
 
 const onClickGetFavorites = async () => {
   try{
-  const result = await fetch(`${url}/favoritelist/${email}`,{
+    if(email.length> 0){
+    const result = await fetch(`${url}/test/${email}`,{
     method: 'GET',
-  })
+      })
   console.log(result)
   // const data = await result?.json()
   // const formattedData = data?.tracks?.map((item) => {
@@ -146,6 +147,15 @@ const onClickGetFavorites = async () => {
   //   }
   // })
   // setFavorites(formattedData)
+}else{
+  toast({
+    title: 'Email is required!',
+    description: 'Need email id to get favorites',
+    status: 'error',
+    duration: 9000,
+    isClosable: true,
+})
+}
 }catch(error){
   toast({
     title: 'An error occured!',
